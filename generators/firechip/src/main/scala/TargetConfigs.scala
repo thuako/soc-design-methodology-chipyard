@@ -51,6 +51,8 @@ class WithScalaTestFeatures extends Config((site, here, up) => {
 // FASED Config Aliases. This to enable config generation via "_" concatenation
 // which requires that all config classes be defined in the same package
 class DDR3FCFS extends FCFS16GBQuadRank
+class DDR3FCFSLLC4MB extends FCFS16GBQuadRankLLC4MB
+
 class DDR3FRFCFS extends FRFCFS16GBQuadRank
 class DDR3FRFCFSLLC4MB extends FRFCFS16GBQuadRankLLC4MB
 

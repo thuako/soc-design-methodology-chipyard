@@ -34,23 +34,48 @@ class GemminiRocketConfig extends Config(
   new chipyard.config.AbstractConfig)
 // DOC include end: GemminiRocketConfig
 
+class LeanGemminiRocketConfig extends Config(
+  new gemmini.DefaultGemminiConfig ++                            
+  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
+  new chipyard.config.AbstractConfig)
+
+class ChipGemminiRocketConfig extends Config(
+  new gemmini.DefaultGemminiConfig ++                            
+  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
+  new chipyard.config.AbstractConfig)
+
+class LeanGemmini4MBRocketConfig extends Config(
+  new gemmini.DefaultGemminiConfig ++                            
+  //new freechips.rocketchip.subsystem.WithNBanks(8) ++           
+  new freechips.rocketchip.subsystem.WithInclusiveCache(capacityKB=4096) ++
+  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
+  new chipyard.config.AbstractConfig)
+
+
+class LeanGemmini4MB8BankRocketConfig extends Config(
+  new gemmini.DefaultGemminiConfig ++                            
+  new freechips.rocketchip.subsystem.WithNBanks(8) ++           
+  new freechips.rocketchip.subsystem.WithInclusiveCache(capacityKB=4096) ++
+  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
+  new chipyard.config.AbstractConfig)
+
 class GemminiRocketConfigPlatformA extends Config(
-  new gemmini.DefaultGemminiConfig ++                            // use Gemmini systolic array GEMM accelerator
+  new gemmini.DefaultGemminiConfig ++                            
   new freechips.rocketchip.subsystem.WithNBigCores(1) ++
   new chipyard.config.AbstractConfig)
 
 class GemminiRocketConfigPlatformB extends Config(
-  new gemmini.DefaultGemminiConfig ++                            // use Gemmini systolic array GEMM accelerator
+  new gemmini.DefaultGemminiConfig ++                            
   new freechips.rocketchip.subsystem.WithNBigCores(1) ++
   new chipyard.config.AbstractConfig)
 
 class GemminiRocketConfigPlatformC extends Config(
-  new gemmini.DefaultGemminiConfig ++                            // use Gemmini systolic array GEMM accelerator
+  new gemmini.DefaultGemminiConfig ++                            
   new freechips.rocketchip.subsystem.WithNBigCores(1) ++
   new chipyard.config.AbstractConfig)
 
 class FPGemminiRocketConfig extends Config(
-  new gemmini.GemminiFP32DefaultConfig ++                         // use FP32Gemmini systolic array GEMM accelerator
+  new gemmini.GemminiFP32DefaultConfig ++                        
   new freechips.rocketchip.subsystem.WithNBigCores(1) ++
   new chipyard.config.AbstractConfig)
 

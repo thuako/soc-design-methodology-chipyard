@@ -7,7 +7,9 @@ cd generators/gemmini
 git pull
 git checkout -t origin/soc-chipyard-base
 git submodule sync
-git software/gemmini-rocc-tests
+
+
+cd software/gemmini-rocc-tests
 git pull
 git checkout -t origin/soc-chipyard-base
 

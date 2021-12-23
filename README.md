@@ -1,3 +1,106 @@
+
+
+# 프로젝트 목표
+Deep Neural Networks (DNNs) 를 가속하기 위해 많은 NPU 들이 나오고 있습니다. 하지만 NPU를 개발 할 때 성능저하가 온다면 deep learning workload는 실행시간이 매우 길다는 특성 때문에 그 원인을 파악하기 쉽지 않습니다. 이번 프로젝트에서는 firesim 의 debugging 툴 중 하나인 FPGA printf 를 이용하여 deep learning workload 성능저하 원인을 쉽게 파악할 수 있게 해줍니다.
+
+
+# 프로젝트 환경설정
+
+### firesim 기본 환경설정 
+* firesim 환경 설정을 처음부터 하려면 약 6시간 정도 걸립니다. 기본 설정 방법은 firesim documentation - https://docs.fires.im/en/latest/Initial-Setup/index.html 을 참조하시기 바랍니다.
+* 좀 더 빠른 환경 셋업을 원하시면 수업 계정에서 만든 ami 이미지 firesim-setup-v0.4 를 이용하거나 Launch template(firesim-fast-setup) 을 이용하시면 됩니다.
+* 지금부터는 firesim documentation을 참고했거나, 저희가 미리 만들어놓은 인스턴스 이미지를 이용하여 기본적인 설정이 완료되었다고 가정하고 이후 환경설정 방법에 대해 설명하겠습니다.
+
+### 인증키   
+* Firesim 은 시뮬레이션 자동화를 위해 F1인스턴스를 자동적으로 생성하고 종료합니다. 하지만 이러한 자동화를 위해서 인스턴스 접속 키를 반드시 firesim.pem 으로 설정해야합니다.
+* 보안상의 이유로 firesim.pem 키는 프로젝트 토론방에서 확인할 수 있습니다.
+
+### git repository setup
+프로젝트를 문제없이 구동하기 위해선 기본 설정되어 있는 chipyard git repository 중 총 세개를 변경해야 합니다. 다음과 같은 명령어를 실행하면 모든 git repository 설정이 완료됩니다.
+``` Shell
+  #!/bin/bash 
+  cd firesim/target-design/chipyard/
+  git reset --hard
+  git remote remove origin
+  git remote add origin https://github.com/thuako/soc-design-methodology-chipyard
+  
+  git pull origin soc-chipyard-base
+  git checkout -t origin/soc-chipyard-base
+  source scripts/soc-methology-setup.sh
+```
+
+# 시뮬레이션 방법
+
+### ResNet50 바이너리 선택
+프로젝트에서는 총 세개의 ResNet50 바이너리를 제공하고 있습니다 (loop, basic, double). 시뮬레이션 하기 원하는 바이너리를 설정하기 위해서는
+``` Shell
+  cd $custommarshal
+  vim soc-marshal-sim.yaml
+```
+위와 같은 명령어를 통해 soc-marshal-sim.yaml 파일을 열고 10번째 줄을 수정합니다.
+``` Shell
+# target-binary에 loop, basic, double 중 하나를 입력
+   "command": "/run-simulate.sh <target-binary> ", 
+```
+
+
+### FPGA disk setup
+타겟 바이너리를 선택하였으면 FPGA에 올릴 디스크 파일을 만듭니다.
+
+``` Shell
+  cd $custommarshal
+
+  # 이전에 디스크 파일을 만든적이 있다면 해당 명령어도 같이 실행
+  # marshal clean custom-marshal/soc-gemmini-sim.yaml
+  marshal build custom-marshal/soc-gemmini-sim.yaml
+  marshal install custom-marshal/soc-gemmini-sim.yaml  
+```
+
+그리고 아래 파일을 들어가 4번재 줄에 "synthe*"를 추가합니다.
+``` Shell
+  vim /home/centos/firesim/deploy/workloads/soc-gemmini-sim.json
+
+  3   "common_simulation_outputs": [
+  4     "uartlog", "synthe*"
+  5   ],
+```
+
+### Run FPGA simulation
+이제 시뮬레이션을 돌리기 위한 모든 준비가 완료되었습니다. 다음과 같은 스크립트를 실행하여 시뮬레이션을 시작합니다. 시뮬레이션은 약 15분 정도 진행됩니다.
+``` Shell
+  cd $soc_firesim
+  ./scripts/sim-all.sh
+```
+### Simulation Result
+
+시뮬레이션결과는 
+~/firesim/deploy/result-workload/####-##-##--##-##-##-soc-gemmini-sim/soc-gemmini-sim-baseline/ 에서 확인 가능합니다.
+시뮬레이션 결과 파일은 총 3개가 있습니다. result.log는 타겟 바이너리를 실행할 때 리눅스 터미널에서 출력해주는 결과이고, synthesized-prints.out0 는 firesim printf 를 통해 출력한 sram 내부의 정보입니다. uartlog 는 시뮬레이션 처음부터 끝까지 모든 터미널 output을 기록한 로그입니다.
+
+# Sram State Visulization
+sram 내부 정보를 layer별, cycle 별로 나누어 sram 상황을 볼 수 있는 방법은
+``` Shell
+  cd $softwaregemmini
+  cd print_vis
+```
+위와 같은 디렉토리로 들어가 jupyter notebook 을 실행하여 확인 할 수 있습니다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------
+
 ![CHIPYARD](https://github.com/ucb-bar/chipyard/raw/master/docs/_static/images/chipyard-logo-full.png)
 
 # Chipyard Framework [![CircleCI](https://circleci.com/gh/ucb-bar/chipyard/tree/master.svg?style=svg)](https://circleci.com/gh/ucb-bar/chipyard/tree/master)

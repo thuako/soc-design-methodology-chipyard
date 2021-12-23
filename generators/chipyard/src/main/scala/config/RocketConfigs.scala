@@ -34,12 +34,59 @@ class GemminiRocketConfig extends Config(
   new chipyard.config.AbstractConfig)
 // DOC include end: GemminiRocketConfig
 
+class LargeScratchGemminiRocketConfig extends Config(
+  new gemmini.LargeScratchGemminiConfig ++                            
+  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
+  new chipyard.config.AbstractConfig)
+
+class MegaScratchGemminiRocketConfig extends Config(
+  new gemmini.MegaScratchGemminiConfig ++                            
+  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
+  new chipyard.config.AbstractConfig)
+
 class LeanGemminiRocketConfig extends Config(
-  new gemmini.DefaultGemminiConfig ++                            
+  new gemmini.LeanGemminiConfig ++                            
   new freechips.rocketchip.subsystem.WithNBigCores(1) ++
   new chipyard.config.AbstractConfig)
 
 class ChipGemminiRocketConfig extends Config(
+  new gemmini.ChipGemminiConfig ++                            
+  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
+  new chipyard.config.AbstractConfig)
+
+class Gemmini2MBRocketConfig extends Config(
+  new gemmini.DefaultGemminiConfig ++                            
+  new freechips.rocketchip.subsystem.WithInclusiveCache(capacityKB=2048) ++
+  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
+  new chipyard.config.AbstractConfig)
+
+class Gemmini2MB16BankRocketConfig extends Config(
+  new gemmini.DefaultGemminiConfig ++                            
+  new freechips.rocketchip.subsystem.WithInclusiveCache(capacityKB=2048) ++
+  new freechips.rocketchip.subsystem.WithNBanks(16) ++           
+  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
+  new chipyard.config.AbstractConfig)
+
+
+class LeanGemmini2MB16BankRocketConfig extends Config(
+  new gemmini.LeanGemminiConfig ++                            
+  new freechips.rocketchip.subsystem.WithInclusiveCache(capacityKB=2048) ++
+  new freechips.rocketchip.subsystem.WithNBanks(16) ++           
+  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
+  new chipyard.config.AbstractConfig)
+
+
+class GemminiRocketConfigPlatformA extends Config(
+  new gemmini.DefaultGemminiConfig ++                            
+  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
+  new chipyard.config.AbstractConfig)
+
+class GemminiRocketConfigPlatformB extends Config(
+  new gemmini.DefaultGemminiConfig ++                            
+  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
+  new chipyard.config.AbstractConfig)
+
+class GemminiRocketConfigPlatformC extends Config(
   new gemmini.DefaultGemminiConfig ++                            
   new freechips.rocketchip.subsystem.WithNBigCores(1) ++
   new chipyard.config.AbstractConfig)
@@ -56,21 +103,6 @@ class LeanGemmini4MB8BankRocketConfig extends Config(
   new gemmini.DefaultGemminiConfig ++                            
   new freechips.rocketchip.subsystem.WithNBanks(8) ++           
   new freechips.rocketchip.subsystem.WithInclusiveCache(capacityKB=4096) ++
-  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
-  new chipyard.config.AbstractConfig)
-
-class GemminiRocketConfigPlatformA extends Config(
-  new gemmini.DefaultGemminiConfig ++                            
-  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
-  new chipyard.config.AbstractConfig)
-
-class GemminiRocketConfigPlatformB extends Config(
-  new gemmini.DefaultGemminiConfig ++                            
-  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
-  new chipyard.config.AbstractConfig)
-
-class GemminiRocketConfigPlatformC extends Config(
-  new gemmini.DefaultGemminiConfig ++                            
   new freechips.rocketchip.subsystem.WithNBigCores(1) ++
   new chipyard.config.AbstractConfig)
 
